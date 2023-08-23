@@ -6,7 +6,6 @@ import { db, guardarObjetosDB, guardarDatosDB, actualizarDatosDB, auth } from '.
 export let carritoProductos = JSON.parse(localStorage.getItem('carritoProductos')) || []; 
 
 
-
 export const leerDatosDB = async (coleccion) => {
     await db.collection(coleccion).onSnapshot((onSnapshot) => { 
         const data = onSnapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
@@ -29,9 +28,9 @@ export const borrarItem = () => {
             let itemBorrar = parseInt(btn.id); 
             carritoProductos = JSON.parse(localStorage.getItem('carritoProductos')); 
             const indexItemBorrar = carritoProductos.findIndex(item => item.id === itemBorrar);
-            carritoProductos.splice(indexItemBorrar, 1);          
-            localStorage.setItem('carritoProductos', JSON.stringify(carritoProductos)); 
-            renderizarCarrito();  
+            carritoProductos.splice(indexItemBorrar, 1);      
+            localStorage.setItem('carritoProductos', JSON.stringify(carritoProductos));
+            renderizarCarrito();    
         })
     })
 };
@@ -41,7 +40,7 @@ export const montoTotalProductos = () => {
     let total = 0;
     if (carritoProductos.length != 0) {
         carritoProductos.forEach(item => {
-            total += item.precio * item.cantidad;
+            total += item.precio * item.cantidad; 
         })
     };
     return total;
@@ -72,6 +71,7 @@ export const mensajeCarroVacio = () => {
 
 };
 
+
 export const detectarBotones = (data) => {
     const botones = document.querySelectorAll('.card button');
     botones.forEach(btn => {
@@ -96,7 +96,7 @@ export const detectarBotones = (data) => {
 
 export const ingresoCarrito = (item) => {
     let productos;
-    const existeItemEnCarrito = carritoProductos.some(producto => producto.id === item.id);
+    const existeItemEnCarrito = carritoProductos.some(producto => producto.id === item.id); 
     if (existeItemEnCarrito) {
         productos = carritoProductos.map(producto => { 
             if (producto.id === item.id) {
@@ -107,6 +107,7 @@ export const ingresoCarrito = (item) => {
             }
         });
         carritoProductos = [...productos]; 
+    } else {
 
         item.cantidad = 1;
         carritoProductos = [...carritoProductos, item]; 
@@ -116,10 +117,11 @@ export const ingresoCarrito = (item) => {
     renderizarCarrito(); 
 };
 
+
 export const vaciarCarrito = () => {
     btnVaciarCarrito.addEventListener("click", () => {
         if (carritoProductos.length != 0) {
-            carritoProductos = [];
+            carritoProductos = []; 
             localStorage.setItem('carritoProductos', JSON.stringify(carritoProductos)); 
             renderizarCarrito(); 
             return;
@@ -214,7 +216,7 @@ $('#btnComprar').on('click', (e) => {
         actualizarDatosDB('games', id, stock);
         carritoProductos = [];
         localStorage.setItem('carritoProductos', JSON.stringify(carritoProductos)); 
-
+        renderizarCarrito();
     })
 
 });
@@ -234,6 +236,7 @@ signupForm.addEventListener('submit', (e) => {
         .createUserWithEmailAndPassword(email, password)
         .then(userCredential => {
             guardarObjetosDB(usuario, 'usuarios');
+            
             signupForm.reset();
             $('#signup-modal').modal('hide')
             console.log('sign up')
@@ -249,6 +252,7 @@ signinForm.addEventListener('submit', (e) => {
     auth
         .signInWithEmailAndPassword(email, password)
         .then(userCredential => {
+    
             signinForm.reset();
             $('#signin-modal').modal('hide')
             console.log('sign in')
