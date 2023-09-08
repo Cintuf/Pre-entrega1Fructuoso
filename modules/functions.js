@@ -78,20 +78,20 @@ export const detectarBotones = (data) => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const producto = data.find(item => item.id === parseInt(btn.id));
-            if (producto.stock === 1) {
-                btn.disabled = true;
-                btn.innerHTML = 'Sin Stock';
-            };
 
-            if (carritoProductos.length === 0 || producto.cantidad === undefined) { 
+            if (producto.stock <= 0) {
+                // El producto no tiene stock, no lo agregamos al carrito
+                return;
+            }
 
+            if (carritoProductos.length === 0 || producto.cantidad === undefined) {
                 producto.cantidad = 1;
             }
-            ingresoCarrito(producto); 
-
+            ingresoCarrito(producto);
         })
     })
 };
+
 
 
 export const ingresoCarrito = (item) => {
